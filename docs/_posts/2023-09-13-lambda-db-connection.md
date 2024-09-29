@@ -1,6 +1,6 @@
 ---
 title:  "람다에서 DB connection pool 유의할점"
-date:   2024-09-29 11:18:22 +0900
+date:   2023-09-13 11:18:22 +0900
 categories:
   - serverless
 tags:
