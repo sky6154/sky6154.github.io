@@ -346,7 +346,7 @@ defaults:
 
 author:
   name        : "Kyeom Jae Ko"
-  bio         : "Web developer"
+  bio         : "맥주 좋아하는 Web 개발자"
   avatar      : "/assets/images/me.png"
   links:
     - label: "Email"
