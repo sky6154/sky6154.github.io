@@ -96,3 +96,10 @@ lambda를 사용할때는 connection execution count를 꼭 설정하는게 좋�
 일단 AWS 계정내에서 동시에 실행 가능한 람다의 수가 다 합쳐서 1000개로 제한이 있어, 다른곳에서 람다를 사용하게 된다면 영향을 미칠 수 있다.  
 스트레스 테스트 해보면서 느낀건데 람다가 무거운 작업을 하지 않는 이상 1000개 다쓰기가 쉽지않을거같긴 하다.  
 
+## 특이사항
+메일을 전송하는 lambda는 큰 문제가 없었는데, SES의 event를 SNS => SQS를 통해 trigger 되는 lambda에서  
+concurrent를 20으로 설정해놨는데 이보다 높게 잡혔다.  
+![lambda_event]({{ "/assets/images/lambda-db-connection/lambda_event.png" | relative_url }})  
+그래프는 70으로 높게 보이는데, 이게 기간을 짧게 보면 줄어든다. 기간을 길게하면 집계되는 수치가 합쳐져서 그렇다.  
+기간을 좀 줄여봐도 순간적으로 20보다 높게 30정도로 잡히는 경우가 있었는데, 종료되는 람다와 새로 실행되는 람다가 동시에 잡혀서 그렇지 않나.. 싶다.  
+FIFO SQS에서 lambda를 trigger 시킬 때 모든 message group id를 동일하게 해서 SQS에 넣어봤는데, 중복 메시지로 처리해서 lambda는 1개만 trigger되어야 할것으로 예상되었는데 2개로 찍혔었다.
