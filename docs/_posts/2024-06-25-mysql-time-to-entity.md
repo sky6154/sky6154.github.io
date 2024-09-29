@@ -5,7 +5,7 @@ categories:
   - java
 tags:
   - entity
-  - jdbc
+  - jpa
   - mysql
 excerpt: "Things to keep in mind when using LocalTime in Entity"
 toc: true
