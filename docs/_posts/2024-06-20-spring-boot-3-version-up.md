@@ -92,7 +92,7 @@ spring boot 3부터는 패키지가 변경되었다.
 예전에 datadog trace에 post 요청 payload까지 모두 남기는 기능이 있는데, 이를 활성화하고 사용하는 사람이 있어 껐던 기억이 있다.  
 물론 민감한 정보를 다루는 서비스는 아니어서 개발자 원인파악 편의를 위해 남기는 경우가 있긴 했는데, 이런 한두개 예외를 두다가..
 
-#### swagger
+### swagger
 ```
 implementation "org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0"
 ```
@@ -109,7 +109,7 @@ annotationProcessor "com.github.therapi:therapi-runtime-javadoc-scribe:0.15.0"
 `org.springdoc.core.models.GroupedOpenApi`
 
 
-#### spring batch
+### spring batch
 `org.springframework.batch.core.configuration.annotation.DefaultBatchConfigurer` 패키지가 spring boot 3에서 사라지고 다음으로 교체되었다..  
 `org.springframework.batch.core.configuration.support.DefaultBatchConfiguration`
 
@@ -173,11 +173,11 @@ public Step step(JobRepository jobRepository, PlatformTransactionManager transac
 5. `@EnableBatchProcessing` 를 SpringApplication내에서 여러번 설정하면 bean 초기화 오류가 발생함
    * SpringApplication 쪽에 한번만 넣어주는게 좋을 듯 ?
 
-#### base64 encoder의 depreacted
+### base64 encoder의 depreacted
 `Base64Utils.encodeToString` 이 deprecated 되었다.  
 `Base64.getEncoder().encodeToString` 로 변경하면 된다.
 
-#### spring cloud gateway
+### spring cloud gateway
 4버전대가 spring boot 3, spring 6과 호환된다.  
 버전업 해야 한다..
 
@@ -189,7 +189,7 @@ public Step step(JobRepository jobRepository, PlatformTransactionManager transac
       final int beginStatusCode = response.statusCode().value() / 100; // 변경후
     ```
 
-#### pebble 버전업
+### pebble 버전업
 ```
 // 변경전
 implementation "io.pebbletemplates:pebble:3.2.1"
@@ -200,7 +200,7 @@ implementation "io.pebbletemplates:pebble:3.2.2"
 implementation "io.pebbletemplates:pebble-spring6:3.2.2"
 ```
 
-#### Spring boot starter redis 설정
+### Spring boot starter redis 설정
 RedisTemplate을 설정하는 과정에서 Jackson2JsonRedisSerializer를 사용할 경우 setObjectMapper가 deprecated 되었다.
 
 ```java
@@ -215,7 +215,7 @@ Jackson2JsonRedisSerializer<Object> serializer = new Jackson2JsonRedisSerializer
 또한 자동 설정을 사용하는 경우.. application yaml 설정을 바꾸어야 한다.  
 `spring.redis.*` -> `spring.data.redis.*`
 
-#### spring-boot-kafka
+### spring-boot-kafka
 spring boot 3 부터 kafka에 대한 모니터링(micrometer)을 metric으로 지원함
 (default: false)
 
@@ -235,13 +235,13 @@ spring boot 3(spring 6) 지원하는 라이브러리로 버전업 필요
 implementation 'org.springframework.kafka:spring-kafka:3.1.4'
 ```
 
-#### jwt 관련 라이브러리
+### jwt 관련 라이브러리
 jwt관련 라이브러리인 jjwt 를 사용중이라면 아래 라이브러리 추가 필요
 ```
 implementation 'javax.xml.bind:jaxb-api:2.3.1'
 ```
 
-#### endpoint 뒤 / 유무
+### endpoint 뒤 / 유무
 spring boot 2 이하에는 `/users/` 와 `/users` 를 동일하게 판별했다.  
 근데 보안상 이슈로 둘을 다르게 판단한다.  
 [문서](https://github.com/spring-projects/spring-boot/wiki/Spring-Boot-3.0-Migration-Guide#spring-mvc-and-webflux-url-matching-changes) 참고  
