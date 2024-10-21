@@ -78,10 +78,20 @@ info에서 server쪽을 돌면서 up 체크를 하는데, 저기서 redis_versio
 
 
 ## 결론
-아마존에서 managed 서비스로 redis를 사용할 경우 자동으로 설정되는 값들이라 변경을 진행하진 않았다.  
+아마존에서 managed 서비스로 redis를 사용할 경우 자동으로 설정되는 값들이라 변경을 진행하진 않았다.
 저게 내부적으로 정한 timeout 3초에 걸리지만 매 health check시마다 진행되는건 아니고, 일정 주기마다 진행되어 서비스에 큰 영향을 미치지는 않을 것이라고 생각되었다.  
-다만 의도하지 않은 outbound라서 좀 그렇긴 한데, health check을 목적으로 진행되는거고, redis용 health check indicator를 다시 작성하기에는 현재 여건상 아니라고 판단되어 우선 known issue로 두었다.  
+다만 의도하지 않은 outbound라서 좀 그렇긴 한데, health check을 목적으로 진행되는거고, redis용 health check indicator를 다시 작성하기에는 현재 여건상 아니라고 판단되어 우선 known issue로 두었다.
+
 요즘 보안문제로 공급망 공격([XZ utils 기사](https://yozm.wishket.com/magazine/detail/2597/)) 등이 핫한데, 아무리 star수 등이 높더라도 뭔가 새로운 라이브러리등을 도입한다면 원치않는 동작을 하는지 주기적으로 잘 보긴 해야할듯 싶다.  
 
 XZ utils도 보면 결국 오픈소스 관리자를 피곤하게 하고, 계속 신규 기능, 일정등으로 압박하면서 새로운 contributor가 신뢰를 얻어 관리 권한을 부여받게되고 그 순간 돌변해서 백도어가 삽입되는 공격이다.  
 개발하면서 기능 개발도 좋지만 보안에도 관심을 놓지 말아야할듯 하다.  
+
+또한 health check 시에 주의해야 할 점이 있다.  
+현재 서비스에서 Redis가 반드시 필요하기 때문에 indicator를 재정의하지 않은것이지, 서비스가 만약 redis를 캐시용도로만 쓰고 redis 장애 시 DB 접근하여 서비스 제공이 가능하고, kubernetes 환경이나 AWS에 ALB등이 적용되어 있다면 몇가지를 더 고려해야 한다.  
+
+kubernetes는 별다른 설정을 하지 않는다면 `livenessProbe`에 의해 health check 실패 시 pod가 재시작된다.  
+이는 redis 하나 장애로 서비스 장애, 나아가서 전체 장애로 이어질 수 있다.  
+
+ALB와 연결되어 target group에 엮여있다면 마찬가지로 health check에 걸려 application은 올바른 동작상태일지라도, 트래픽을 받지 못한다.  
+이는 특정 서버에만 트래픽이 몰리거나, 1대일경우 순단이 발생할 수 있고 동일 코드일 경우 결국 장애로 이어질 수 있기 때문이다.
